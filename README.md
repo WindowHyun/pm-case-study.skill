@@ -53,6 +53,21 @@ Claude Code에서 아래 같은 표현이면 자동 발동한다:
 
 두 파일은 `~/.claude/skills/ai-pm-case-study/`의 절대경로를 참조하므로, 스킬이 그 위치에 설치돼 있어야 한다.
 
+## 수정·재배포 (동기화)
+
+**이 저장소가 원본(source of truth)이다.** 설치본(`~/.claude/skills/ai-pm-case-study/`)은 복사본이므로, 스킬을 고칠 때는 어느 한쪽만 고치고 끝내지 말 것.
+
+- 저장소에서 수정했을 때 → 설치본으로 반영:
+  ```bash
+  cp -r SKILL.md references ~/.claude/skills/ai-pm-case-study/
+  ```
+- 설치본에서 먼저 수정(사용 중 개선)했을 때 → 저장소로 역반영 후 커밋:
+  ```bash
+  cp -r ~/.claude/skills/ai-pm-case-study/SKILL.md ~/.claude/skills/ai-pm-case-study/references .
+  git add -A && git commit
+  ```
+- 6단계 구조 자체를 바꿀 때는 `references/stage-templates.md`가 단일 원본 — SKILL.md의 "유지보수 규칙"에 함께 갱신할 파일 목록이 있다.
+
 ## PDF 출력 참고
 
 - 대상 OS: **Windows / macOS**

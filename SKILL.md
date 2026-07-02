@@ -40,20 +40,10 @@ description: AI PM(프로덕트 매니저) 또는 노코드+AI API 기반 수익
 
 **태그 정리 (중요)**: `[가정]`·`[추가 입력 필요]` 표기는 초안 검토용이다. 최종 파일(HTML/PDF)을 만들기 전에 사용자에게 남은 `[추가 입력 필요]` 항목을 한 번 더 확인받고, 채워진 `[가정]` 항목은 "이대로 확정할지" 물어본 뒤 **최종본에서는 이 태그들을 모두 제거**한다. 포트폴리오·데모데이 제출본에 이런 태그가 남으면 안 된다. (사용자가 "초안이니 태그 남겨둬"라고 하면 예외.)
 
-출력은 기본적으로 **HTML + PDF** 두 가지로 만든다.
-- 먼저 스타일이 적용된 **HTML 파일(.html)**을 작성한다. `references/html-template.html`을 베이스로 복사해 `{{...}}` 자리표시자를 채운다 (제목/섹션 위계·표·KPI 카드·인라인 CSS가 이미 들어간 자체 완결형 단일 파일).
-  - **한글 폰트**: 템플릿은 Noto Sans KR 웹폰트를 우선 쓰고, 오프라인/로컬 폰트 부재 시 시스템 CJK 폰트로 폴백하도록 `font-family` 스택이 짜여 있다. 이 폰트 설정을 지우지 말 것 — 지우면 한글 폰트 없는 환경에서 PDF 글자가 깨진다.
-  - **이미지**: 사용자가 스크린샷을 주면 `<figure><img>`로 넣되, PDF에 안전하게 포함되도록 가능하면 base64 data URI로 인라인한다.
-- 그 HTML을 **PDF 파일(.pdf)**로 변환한다. 대상 OS는 **Windows와 macOS**다. Chrome·Edge는 크롬 엔진이라 헤드리스 자동 변환이 되고, Safari는 CLI 헤드리스 변환을 지원하지 않으므로 수동 저장 폴백으로만 쓴다.
-  - **자동 변환 명령 형식** (Chrome·Edge 공통): `"<실행파일>" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="출력.pdf" "file:///절대경로/문서.html"` (A4·배경색 포함해 렌더됨). **`--no-sandbox`는 붙이지 않는다** — 일반 Windows/macOS 환경에선 불필요하고 보안상 권장되지 않는다.
-  - **Windows** — 아래에서 존재하는 첫 실행 파일로 자동 변환:
-    1. Chrome: `C:\Program Files\Google\Chrome\Application\chrome.exe` (없으면 `C:\Program Files (x86)\Google\Chrome\Application\chrome.exe`)
-    2. Edge: `C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe` (없으면 `C:\Program Files\Microsoft\Edge\Application\msedge.exe`) — Edge는 윈도우에 기본 설치돼 있어 Chrome이 없어도 대부분 성공한다.
-  - **macOS** — Chrome이 있으면 자동 변환, 없으면 Safari 수동 폴백:
-    1. Chrome: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` 로 자동 변환
-    2. Chrome이 없으면 자동 변환 대신, HTML을 Safari로 열어(`open -a Safari 문서.html`) 사용자에게 **`Cmd+P → PDF로 저장`**(또는 파일 → PDF로 내보내기)으로 저장하도록 안내한다. Safari는 맥에 항상 있다.
-  - 어느 쪽도 안 되면 HTML만 전달하고 브라우저에서 `Ctrl/Cmd+P → PDF로 저장`을 안내한다.
-- 두 파일 모두 사용자에게 전달한다 (HTML은 화면 확인용, PDF는 제출·공유용). 사용자가 마크다운이나 다른 형식을 원하면 그에 따른다.
+출력은 기본적으로 **HTML + PDF** 두 가지로 만든다. 구체적인 방법은 `references/output-guide.md`를 따른다. 요점만:
+- HTML: `references/html-template.html`을 복사해 `{{...}}`를 채운다 (한글 폰트 스택을 지우지 말 것).
+- PDF: Windows는 Chrome→Edge 헤드리스로 자동 변환, macOS는 Chrome 자동 변환 → 없으면 Safari로 열어 `Cmd+P` 수동 저장 안내.
+- 저장 파일명: `<프로젝트명>_case-study.html` / `.pdf`. 두 파일 모두 사용자에게 전달한다.
 
 ## 6단계 프레임워크 (요약)
 
@@ -76,3 +66,12 @@ description: AI PM(프로덕트 매니저) 또는 노코드+AI API 기반 수익
 - 사용자가 제공하지 않은 숫자·성과·고객 반응을 절대 지어내지 않는다.
 - 아직 결과가 없는 초기 단계 프로젝트도 지원한다 — 이 경우 "결과" 섹션을 "목표/계획"으로 바꿔 쓴다.
 - 질문할 때 한 번에 너무 많이 묻지 않는다 (단계별로 나눠서 순차적으로).
+
+## 유지보수 규칙 (이 스킬을 수정할 때)
+
+- **6단계 섹션 구조의 단일 원본은 `references/stage-templates.md`다.** 구조를 바꿀 때(섹션 추가·삭제·이름 변경)는 stage-templates.md를 먼저 고치고, 아래 파일들을 그에 맞춰 함께 갱신한다 — 하나라도 빠지면 질문과 문서가 어긋난다:
+  - `SKILL.md`의 "6단계 프레임워크 (요약)" 표
+  - `references/html-template.html`의 섹션 마크업
+  - `references/example-case-study.md`의 예시 섹션
+  - `references/checklist.md`의 점검 항목
+- 스킬을 수정했으면 배포 저장소에도 반영한다 (저장소 README의 "수정·재배포" 절차 참고).
