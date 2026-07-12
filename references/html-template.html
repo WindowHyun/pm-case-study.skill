@@ -88,6 +88,13 @@
   table.matrix .win { color: #1a7f4b; font-weight: 700; }
   table.matrix .lose { color: #b00020; }
 
+  /* 초안 검토용 태그 — [가정]은 tag-a(노랑), [추가 입력 필요]는 tag-n(빨강).
+     예: <span class="tag tag-a">가정</span>  <span class="tag tag-n">추가 입력 필요</span>
+     최종본에서는 태그를 모두 제거한다 (SKILL.md 6단계 "태그 정리"). */
+  .tag { font-size: 12px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
+  .tag-a { background: #fff3d6; color: #9a6b00; }
+  .tag-n { background: #ffe0e0; color: #b00020; }
+
   footer.doc-foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 
   @page { size: A4; margin: 16mm; }
