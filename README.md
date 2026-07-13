@@ -20,7 +20,8 @@ references/
 ├── quality-principles.md         실무 품질 원칙 + 깊이 기준
 ├── checklist.md                  최종 산출물 점검 리스트
 ├── html-template.html            시각 컴포넌트 포함 HTML 출력 템플릿
-└── example-case-study.md         실무급 예시 (톤·깊이 기준점)
+├── example-case-study.md         실무급 예시 (톤·깊이 기준점)
+└── output-guide.md               HTML/PDF 출력 절차 (OS별 변환·파일명 규칙)
 integrations/
 ├── codex-AGENTS.md               Codex 연동용 포인터 예시
 └── gemini-GEMINI.md              Gemini 연동용 포인터 예시

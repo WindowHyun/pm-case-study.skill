@@ -75,4 +75,5 @@ description: AI PM(프로덕트 매니저) 또는 노코드+AI API 기반 수익
   - `references/html-template.html`의 섹션 마크업
   - `references/example-case-study.md`의 예시 섹션
   - `references/checklist.md`의 점검 항목
+- **reference 파일을 추가·삭제·이름 변경할 때**는 다음도 함께 갱신한다: 저장소 README의 구조 트리, `integrations/`의 Codex·Gemini 포인터 "읽을 파일" 목록, SKILL.md 안의 해당 파일 참조.
 - 스킬을 수정했으면 배포 저장소에도 반영한다 (저장소 README의 "수정·재배포" 절차 참고).

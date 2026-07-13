@@ -13,6 +13,7 @@
 4. `~/.claude/skills/ai-pm-case-study/references/checklist.md` — 최종 산출물 점검
 5. `~/.claude/skills/ai-pm-case-study/references/html-template.html` — HTML 출력 베이스 템플릿
 6. `~/.claude/skills/ai-pm-case-study/references/example-case-study.md` — 톤·분량 예시
+7. `~/.claude/skills/ai-pm-case-study/references/output-guide.md` — HTML/PDF 출력 절차(OS별 변환·파일명 규칙)
 
 **핵심 규칙 (요약)**
 - 한 번에 다 묻고 다 쓰지 않는다. 먼저 갭 분석 → 단계별로 나눠 질문 → 답변 반영 후 작성.
