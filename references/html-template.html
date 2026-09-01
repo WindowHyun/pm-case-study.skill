@@ -83,6 +83,10 @@
   .flow .arrow { color: var(--muted); font-weight: 700; }
   .flow .branch { border-style: dashed; color: var(--muted); border-color: var(--line); }
 
+  /* 참고 자료 표 — 긴 URL이 A4 본문 폭을 넘어가지 않게 줄바꿈 */
+  table.refs { font-size: 13px; }
+  table.refs a { color: var(--accent); word-break: break-all; }
+
   /* 비교 매트릭스 — 우리 서비스 열 강조 */
   table.matrix th.us, table.matrix td.us { background: #eef3fb; }
   table.matrix .win { color: #1a7f4b; font-weight: 700; }
@@ -147,6 +151,22 @@
         <tr><td>가격</td><td>{{...}}</td><td>{{...}}</td><td class="us">{{...}}</td></tr>
       </table>
       <p><b>포지셔닝:</b> {{한 문장으로 "누구에게 왜 우리가 유일하게 맞는지"}}</p>
+      <h3>참고 자료 (아이디어 소스)</h3>
+      <!-- 필수 섹션. 링크 나열 금지 — "얻은 것 → 기획에 반영한 방식"까지 쓴다.
+           사용자가 실제로 준 출처만 넣는다. URL을 지어내지 않는다. -->
+      <table class="refs">
+        <tr>
+          <th style="width:26%">참고한 것</th>
+          <th style="width:28%">출처 (URL/서비스명)</th>
+          <th>얻은 것 &rarr; 기획에 반영한 방식</th>
+        </tr>
+        <tr>
+          <td>{{글/영상/서비스 제목}}</td>
+          <td><a href="{{url}}">{{url 또는 출처명}}</a></td>
+          <td>{{무엇을 알게 됐고, 그래서 어떤 판단을 했는지}}</td>
+        </tr>
+      </table>
+
       <h3>핵심 기능 (PRD 요약)</h3>
       <p>{{...}}</p>
       <h3>의사결정: 무엇을 넣고 뺐나 (스코프 결정 근거)</h3>
