@@ -1,6 +1,6 @@
 # 단계별 질문 목록 & 문서 템플릿
 
-SKILL.md 워크플로우의 2단계(갭 분석), 3단계(질문 작성), 5단계(문서 작성)에서 참고한다.
+SKILL.md 워크플로우의 STEP 2(갭 분석), STEP 3(질문 작성), STEP 5(문서 작성)에서 참고한다. (**STEP N**은 작업 순서, **N단계**는 아래 프레임워크 단계다.)
 
 > **이 파일이 6단계 섹션 구조의 단일 원본이다.** 구조를 바꾸면 SKILL.md 요약표, html-template.html, example-case-study.md, checklist.md를 함께 갱신할 것 (SKILL.md "유지보수 규칙" 참고).
 
