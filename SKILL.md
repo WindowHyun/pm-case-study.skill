@@ -79,5 +79,18 @@ description: AI PM(프로덕트 매니저) 또는 노코드+AI API 기반 수익
   - `references/html-template.html`의 섹션 마크업
   - `references/example-case-study.md`의 예시 섹션
   - `references/checklist.md`의 점검 항목
+  - `README.md` 본문의 6단계 이름 나열 (단계 **이름**을 바꿀 때만 해당)
+
+  구조를 고친 뒤에는 세 파일이 실제로 일치하는지 확인한다:
+
+````bash
+awk '/^```$/{f=!f;next} f&&/^###/{print}' references/stage-templates.md | sed 's/^### //' > /tmp/st.txt
+grep -o '<h3>[^<]*</h3>' references/html-template.html | sed 's|<h3>||;s|</h3>||;s/&amp;/\&/g' | diff /tmp/st.txt - && echo "html OK"
+grep '^### ' references/example-case-study.md | sed 's/^### //' | diff /tmp/st.txt - && echo "example OK"
+````
+
+- **`references/quality-principles.md`에 원칙을 더하거나 고치면, `references/example-case-study.md`가 그 원칙을 실제로 지키는지 반드시 확인한다.** 예시 문서는 Claude가 톤·깊이를 흉내 내는 기준점이라, 원칙만 고치고 예시를 두면 **예시가 원칙을 이긴다**. 용어 풀이·표 형식처럼 서술 방식에 관한 원칙은 특히 그렇다.
+- **`quality-principles.md`가 이름으로 참조하는 HTML 클래스(`.persona` · `table.matrix` · `.flow` · `table.refs`)는 `html-template.html`과 짝이다.** 클래스명을 바꾸면 양쪽을 함께 고친다.
 - **reference 파일을 추가·삭제·이름 변경할 때**는 다음도 함께 갱신한다: 저장소 README의 구조 트리, `integrations/`의 Codex·Gemini 포인터 "읽을 파일" 목록, SKILL.md 안의 해당 파일 참조.
+- **내용을 다른 파일로 옮겼을 때(추출)는 그 내용을 가리키던 포인터도 전부 따라 고친다.** "자세한 건 X 참고" 문장이 옮기기 전 위치를 가리킨 채로 남으면, 그 문장을 믿고 X를 연 쪽은 내용을 못 찾는다. 옮긴 뒤 `grep -rn "옮긴 내용의 키워드" . --exclude-dir=.git`으로 남은 포인터를 훑는다.
 - 스킬을 수정했으면 배포 저장소에도 반영한다 (저장소 README의 "수정·재배포" 절차 참고).

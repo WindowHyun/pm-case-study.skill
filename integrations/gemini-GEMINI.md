@@ -18,4 +18,4 @@
 **핵심 규칙 (요약)**
 - 한 번에 다 묻고 다 쓰지 않는다. 먼저 갭 분석 → 단계별로 나눠 질문 → 답변 반영 후 작성.
 - 사용자가 안 준 숫자·성과·고객 반응을 지어내지 않는다.
-- 출력은 HTML + PDF. PDF는 Chrome/Edge 헤드리스(`--headless --print-to-pdf`)로 변환, 안 되면 브라우저 `Ctrl/Cmd+P → PDF로 저장` 안내. (자세한 OS별 경로는 SKILL.md 6단계 참고)
+- 출력은 HTML + PDF. PDF는 Chrome/Edge 헤드리스(`--headless --print-to-pdf`)로 변환, 안 되면 브라우저 `Ctrl/Cmd+P → PDF로 저장` 안내. 자세한 OS별 실행 파일 경로·폴백 절차는 위 7번 `output-guide.md`에 있다 — SKILL.md에는 한 줄 요약만 있으므로 반드시 output-guide.md를 열 것.
