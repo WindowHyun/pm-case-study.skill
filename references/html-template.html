@@ -71,7 +71,9 @@
   figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
   figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 
-  /* 페르소나 카드 — 이름·한 줄·pain·인용을 담는다 (추상적 서술 금지) */
+  /* 페르소나 카드 — 이름·한 줄·pain·인용을 담는다 (추상적 서술 금지).
+     .quote는 PM이 구성한 대표 인물의 예시 대사다 — 실제 유저 발화가 아니다.
+     실제 유저 반응은 여기가 아니라 4단계의 .callout에 넣는다. */
   .persona { display: flex; gap: 16px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
   .persona .avatar { font-size: 34px; line-height: 1; }
   .persona .body { flex: 1; }
@@ -149,7 +151,9 @@
         </div>
       </div>
       <h3>경쟁/시장 맥락 &amp; 차별점</h3>
-      <!-- 산문 대신 비교 매트릭스로. 우리 열(us)을 강조 -->
+      <!-- 산문 대신 비교 매트릭스로. 우리 열(us)을 강조.
+           가격·소요시간 등 구체적 수치는 사용자가 준 것이거나 아래 "참고 자료" 표에 실제로 나온 것만 쓴다.
+           페르소나와 달리 이 칸은 제3자에 대한 사실 주장이라 지어내면 환각이다 — 근거 없으면 정성 비교나 [가정]으로. -->
       <table class="matrix">
         <tr><th>비교</th><th>{{경쟁A}}</th><th>{{경쟁B}}</th><th class="us">{{우리 서비스}}</th></tr>
         <tr><td>{{기준1}}</td><td>{{...}}</td><td>{{...}}</td><td class="us win">{{강점}}</td></tr>
