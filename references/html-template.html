@@ -11,10 +11,13 @@
   - 이 파일은 자체 완결형(single file). 이미지가 있으면 base64 data URI로 인라인하면 PDF에도 안전하게 포함된다.
   폰트: Noto Sans KR 웹폰트를 우선 시도하고, 네트워크가 없으면 로컬 CJK 폰트로 폴백한다
   (font-family 스택에 시스템 한글 폰트를 넉넉히 넣어 로컬 폰트 부재/오프라인에서도 최대한 안 깨지게 함).
+  웹폰트는 @import 대신 <link>로 건다 — 헤드리스 PDF 변환에서 로드가 더 일찍 시작돼 폴백으로 찍힐 확률이 낮다.
+  네트워크가 없어도 아래 폴백 스택이 받아주므로 이 <link>가 실패해도 한글은 깨지지 않는다.
 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-
   :root {
     --ink: #1f2430;
     --muted: #5b6472;
@@ -68,7 +71,9 @@
   figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
   figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
 
-  /* 페르소나 카드 — 이름·한 줄·pain·인용을 담는다 (추상적 서술 금지) */
+  /* 페르소나 카드 — 이름·한 줄·pain·인용을 담는다 (추상적 서술 금지).
+     .quote는 PM이 구성한 대표 인물의 예시 대사다 — 실제 유저 발화가 아니다.
+     실제 유저 반응은 여기가 아니라 4단계의 .callout에 넣는다. */
   .persona { display: flex; gap: 16px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
   .persona .avatar { font-size: 34px; line-height: 1; }
   .persona .body { flex: 1; }
@@ -83,6 +88,10 @@
   .flow .arrow { color: var(--muted); font-weight: 700; }
   .flow .branch { border-style: dashed; color: var(--muted); border-color: var(--line); }
 
+  /* 참고 자료 표 — 긴 URL이 A4 본문 폭을 넘어가지 않게 줄바꿈 */
+  table.refs { font-size: 13px; }
+  table.refs a { color: var(--accent); word-break: break-all; }
+
   /* 비교 매트릭스 — 우리 서비스 열 강조 */
   table.matrix th.us, table.matrix td.us { background: #eef3fb; }
   table.matrix .win { color: #1a7f4b; font-weight: 700; }
@@ -90,7 +99,7 @@
 
   /* 초안 검토용 태그 — [가정]은 tag-a(노랑), [추가 입력 필요]는 tag-n(빨강).
      예: <span class="tag tag-a">가정</span>  <span class="tag tag-n">추가 입력 필요</span>
-     최종본에서는 태그를 모두 제거한다 (SKILL.md 6단계 "태그 정리"). */
+     최종본에서는 태그를 모두 제거한다 (SKILL.md STEP 6 "태그 정리"). */
   .tag { font-size: 12px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
   .tag-a { background: #fff3d6; color: #9a6b00; }
   .tag-n { background: #ffe0e0; color: #b00020; }
@@ -98,6 +107,9 @@
   footer.doc-foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 
   @page { size: A4; margin: 16mm; }
+  /* 화면에서는 body 패딩으로 여백을 주지만, 인쇄/PDF에서는 @page margin과 이중으로 겹쳐
+     본문 폭이 A4의 70% 수준으로 좁아진다. 인쇄 시엔 @page margin만 쓴다. */
+  @media print { body { padding: 0; } }
   section, table, figure, .callout, .persona, .flow { break-inside: avoid; }
 </style>
 </head>
@@ -139,7 +151,9 @@
         </div>
       </div>
       <h3>경쟁/시장 맥락 &amp; 차별점</h3>
-      <!-- 산문 대신 비교 매트릭스로. 우리 열(us)을 강조 -->
+      <!-- 산문 대신 비교 매트릭스로. 우리 열(us)을 강조.
+           가격·소요시간 등 구체적 수치는 사용자가 준 것이거나 아래 "참고 자료" 표에 실제로 나온 것만 쓴다.
+           페르소나와 달리 이 칸은 제3자에 대한 사실 주장이라 지어내면 환각이다 — 근거 없으면 정성 비교나 [가정]으로. -->
       <table class="matrix">
         <tr><th>비교</th><th>{{경쟁A}}</th><th>{{경쟁B}}</th><th class="us">{{우리 서비스}}</th></tr>
         <tr><td>{{기준1}}</td><td>{{...}}</td><td>{{...}}</td><td class="us win">{{강점}}</td></tr>
@@ -147,6 +161,22 @@
         <tr><td>가격</td><td>{{...}}</td><td>{{...}}</td><td class="us">{{...}}</td></tr>
       </table>
       <p><b>포지셔닝:</b> {{한 문장으로 "누구에게 왜 우리가 유일하게 맞는지"}}</p>
+      <h3>참고 자료 (아이디어 소스)</h3>
+      <!-- 필수 섹션. 링크 나열 금지 — "얻은 것 → 기획에 반영한 방식"까지 쓴다.
+           사용자가 실제로 준 출처만 넣는다. URL을 지어내지 않는다. -->
+      <table class="refs">
+        <tr>
+          <th style="width:26%">참고한 것</th>
+          <th style="width:28%">출처 (URL/서비스명)</th>
+          <th>얻은 것 &rarr; 기획에 반영한 방식</th>
+        </tr>
+        <tr>
+          <td>{{글/영상/서비스 제목}}</td>
+          <td><a href="{{url}}">{{url 또는 출처명}}</a></td>
+          <td>{{무엇을 알게 됐고, 그래서 어떤 판단을 했는지}}</td>
+        </tr>
+      </table>
+
       <h3>핵심 기능 (PRD 요약)</h3>
       <p>{{...}}</p>
       <h3>의사결정: 무엇을 넣고 뺐나 (스코프 결정 근거)</h3>

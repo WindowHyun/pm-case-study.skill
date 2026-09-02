@@ -7,7 +7,8 @@ AI PM(프로덕트 매니저) / 노코드+AI API 기반 수익화 프로젝트�
 ## 특징
 
 - **한 번에 다 묻지 않음** — 먼저 빠진 부분을 분석하고 단계별로 나눠 질문
-- **지어내지 않음** — 사용자가 안 준 수치·성과는 `[가정]` / `[추가 입력 필요]`로 표시
+- **지어내지 않음** — 사용자가 안 준 수치·성과·**출처 URL**은 `[가정]` / `[추가 입력 필요]`로 표시
+- **참고 자료 필수** — 아이디어 구상 때 본 페이지·글·서비스를 "출처 → 얻은 것 → 반영한 판단"으로 반드시 기록. 비어 있으면 최종 파일을 만들지 않고 다시 물어봄
 - **실무 품질 기준** — 원페이저 요약, 의사결정 서술, 경쟁 비교표, 구체적 페르소나, 정량 지표표 등 "합격하는" 케이스 스터디 요소 반영
 - **HTML + PDF 출력** — Noto Sans KR 웹폰트 + CJK 폴백 스택 내장, 헤드리스 Chrome/Edge로 PDF 변환
 
@@ -37,7 +38,9 @@ mkdir -p ~/.claude/skills/ai-pm-case-study
 cp -r /tmp/pm-case-study.skill/SKILL.md /tmp/pm-case-study.skill/references ~/.claude/skills/ai-pm-case-study/
 ```
 
-특정 프로젝트에만 쓰려면 `~/.claude/skills/` 대신 해당 프로젝트의 `.claude/skills/`에 둔다.
+**설치 폴더 이름은 반드시 `ai-pm-case-study`여야 한다** — `SKILL.md`의 `name:` 필드와 같아야 하기 때문이다. 이 저장소를 그대로 clone하면 폴더명이 `pm-case-study.skill`이 되므로, `.claude/skills/` 아래에 그대로 두거나 심볼릭 링크하지 말고 위 명령처럼 **`ai-pm-case-study`로 이름을 맞춰** 복사한다.
+
+특정 프로젝트에만 쓰려면 `~/.claude/skills/` 대신 해당 프로젝트의 `.claude/skills/`에 둔다 (폴더 이름 규칙은 동일).
 
 ## 사용
 
@@ -58,20 +61,30 @@ Claude Code에서 아래 같은 표현이면 자동 발동한다:
 
 **이 저장소가 원본(source of truth)이다.** 설치본(`~/.claude/skills/ai-pm-case-study/`)은 복사본이므로, 스킬을 고칠 때는 어느 한쪽만 고치고 끝내지 말 것.
 
+`cp -r`는 파일을 덮어쓸 뿐 **지워진 파일을 반영하지 못한다** — reference 파일을 삭제하거나 이름을 바꾸면 반대편에 옛 파일이 유령처럼 남는다. 그래서 `references/`는 `rsync --delete`로 미러링한다.
+
 - 저장소에서 수정했을 때 → 설치본으로 반영:
   ```bash
-  cp -r SKILL.md references ~/.claude/skills/ai-pm-case-study/
+  DEST=~/.claude/skills/ai-pm-case-study
+  mkdir -p "$DEST"
+  cp SKILL.md "$DEST/"
+  rsync -a --delete references/ "$DEST/references/"
   ```
 - 설치본에서 먼저 수정(사용 중 개선)했을 때 → 저장소로 역반영 후 커밋:
   ```bash
-  cp -r ~/.claude/skills/ai-pm-case-study/SKILL.md ~/.claude/skills/ai-pm-case-study/references .
+  SRC=~/.claude/skills/ai-pm-case-study
+  cp "$SRC/SKILL.md" .
+  rsync -a --delete "$SRC/references/" references/
   git add -A && git commit
   ```
+  (`rsync`가 없으면 `cp -r` 후 반대편에 남은 옛 파일을 직접 지운다.)
 - 6단계 구조 자체를 바꿀 때는 `references/stage-templates.md`가 단일 원본 — SKILL.md의 "유지보수 규칙"에 함께 갱신할 파일 목록이 있다.
 
 ## PDF 출력 참고
 
-- 대상 OS: **Windows / macOS**
+- 주 대상 OS: **Windows / macOS** (+ Linux/WSL 폴백)
 - Windows: Chrome → 없으면 Edge(기본 설치)로 자동 변환
 - macOS: Chrome으로 자동 변환, 없으면 Safari로 열어 `Cmd+P → PDF로 저장`
-- 어느 쪽도 안 되면 HTML만 전달 + 브라우저 `Ctrl/Cmd+P → PDF로 저장` 안내
+- Linux/WSL: PATH에서 `google-chrome` / `chromium` 계열을 찾아 자동 변환
+- 어느 쪽도 안 되면 HTML만 전달 + 브라우저 `Ctrl/Cmd+P → PDF로 저장` 안내 (인쇄 설정에서 "배경 그래픽" 켜기)
+- Windows에서 변환이 실패하는 대부분의 원인은 `file://` URL 형식이다 — 자세한 건 `references/output-guide.md`

@@ -1,6 +1,6 @@
 # 출력 가이드 (HTML + PDF)
 
-SKILL.md 6단계(완성도 체크 & 출력)에서 참고한다. 출력은 기본적으로 **HTML + PDF** 두 가지.
+SKILL.md STEP 6(완성도 체크 & 출력)에서 참고한다. 출력은 기본적으로 **HTML + PDF** 두 가지.
 
 ## 저장 위치 & 파일명
 
@@ -16,17 +16,29 @@ SKILL.md 6단계(완성도 체크 & 출력)에서 참고한다. 출력은 기본
 
 ## 2. PDF 변환
 
-대상 OS는 **Windows와 macOS**다. Chrome·Edge는 크롬 엔진이라 헤드리스 자동 변환이 되고, Safari는 CLI 헤드리스 변환을 지원하지 않으므로 수동 저장 폴백으로만 쓴다.
+주 대상은 **Windows와 macOS**, 여기에 **Linux/WSL 폴백**을 둔다. Chrome·Edge·Chromium은 같은 엔진이라 헤드리스 자동 변환이 되고, Safari는 CLI 헤드리스 변환을 지원하지 않으므로 수동 저장 폴백으로만 쓴다.
 
-**자동 변환 명령 형식** (Chrome·Edge 공통):
+**자동 변환 명령 형식** (Chrome·Edge·Chromium 공통):
 
 ```
 "<실행파일>" --headless --disable-gpu --no-pdf-header-footer --virtual-time-budget=10000 --print-to-pdf="출력.pdf" "file:///절대경로/문서.html"
 ```
 
 - A4·배경색 포함해 렌더된다.
-- `--virtual-time-budget=10000`은 웹폰트(Noto Sans KR) 로딩을 기다리게 하는 옵션 — 빼면 폴백 폰트로 찍힐 수 있다.
-- **`--no-sandbox`는 붙이지 않는다** — 일반 Windows/macOS 환경에선 불필요하고 보안상 권장되지 않는다.
+- `--virtual-time-budget=10000`은 웹폰트 로딩을 기다리게 하는 **베스트에포트** 옵션이다. 최신 Chrome의 새 헤드리스 모드에서는 무시될 수 있으니 **폰트를 이 옵션에 의존하지 않는다** — 한글이 안 깨지는 실질적 보장은 템플릿의 **CJK 폴백 스택**이다(그래서 지우면 안 된다). 웹폰트가 안 잡혀도 시스템 한글 폰트로 정상 출력된다.
+- **`--no-sandbox`**: Windows/macOS에서는 **붙이지 않는다**(불필요하고 보안상 권장되지 않음). Linux 컨테이너·root 실행에서 sandbox 오류로 실패할 때만 붙인다.
+
+### file:// URL 만들기 (변환 실패 1순위)
+
+`--print-to-pdf`는 **절대경로 file:// URL**을 요구한다. 상대경로나 평범한 파일 경로를 주면 빈 PDF가 나오거나 조용히 실패한다.
+
+- macOS/Linux: 절대경로 앞에 `file://`를 붙이면 끝 — `file:///Users/me/work/문서.html`
+- **Windows: 역슬래시를 그대로 쓰면 안 된다.** `\`를 `/`로 바꾸고 드라이브 문자를 포함한다.
+  - ✗ `file:///C:\Users\me\문서.html`
+  - ✓ `file:///C:/Users/me/문서.html`
+- 경로에 공백이 있으면 URL 전체를 따옴표로 감싼다. 한글 경로는 대개 그대로 동작하지만, 실패하면 영문 경로(예: 홈 디렉토리 바로 아래)로 옮겨 변환한 뒤 결과 파일만 되돌린다.
+
+### OS별 실행 파일
 
 **Windows** — 아래에서 존재하는 첫 실행 파일로 자동 변환:
 1. Chrome: `C:\Program Files\Google\Chrome\Application\chrome.exe` (없으면 `C:\Program Files (x86)\Google\Chrome\Application\chrome.exe`)
@@ -36,7 +48,14 @@ SKILL.md 6단계(완성도 체크 & 출력)에서 참고한다. 출력은 기본
 1. Chrome: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` 로 자동 변환
 2. Chrome이 없으면 HTML을 Safari로 열어(`open -a Safari 문서.html`) 사용자에게 **`Cmd+P → PDF로 저장`**(또는 파일 → PDF로 내보내기)을 안내한다. Safari는 맥에 항상 있다.
 
-**둘 다 안 되면**: HTML만 전달하고 브라우저에서 `Ctrl/Cmd+P → PDF로 저장`을 안내한다.
+**Linux / WSL** — PATH에서 아래 순서로 찾아 자동 변환:
+1. `google-chrome` → `google-chrome-stable` → `chromium` → `chromium-browser`
+   (`command -v google-chrome || command -v chromium` 식으로 존재 확인)
+2. 하나도 없으면 HTML만 전달하고 브라우저 수동 저장을 안내한다 (아래 폴백과 동일).
+- 컨테이너·root 실행에서 sandbox 오류가 나면 그때만 `--no-sandbox`를 붙인다.
+- WSL에서 Windows 쪽 Chrome(`/mnt/c/Program Files/...`)을 호출할 수도 있는데, 이 경우 **file:// URL도 Windows 형식**(`file:///C:/...`)이어야 한다. 리눅스 경로(`/mnt/c/...`)를 그대로 주면 실패한다.
+
+**어느 쪽도 안 되면**: HTML만 전달하고 브라우저에서 `Ctrl/Cmd+P → PDF로 저장`을 안내한다. 이때 인쇄 설정에서 **"배경 그래픽" 옵션을 켜야** KPI 카드·표 헤더 배경이 나온다.
 
 ## 3. 전달
 
